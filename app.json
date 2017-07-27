@@ -1,8 +1,8 @@
 {
-  "name": "Start on Heroku: Python",
-  "description": "A barebones Python app, which can easily be deployed to Heroku.",
+  "name": "TV Shortcut",
+  "description": "Personal list of TV shows extracted from external website in one tidy place ",
   "image": "heroku/python",
-  "repository": "https://github.com/heroku/python-getting-started",
-  "keywords": ["python", "django" ],
+  "repository": "https://github.com/blackCheetah/tvshortcut.herokuapp.com",
+  "keywords": ["python", "flask", "django" ],
   "addons": [ "heroku-postgresql" ]
 }
