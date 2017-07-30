@@ -6,6 +6,10 @@ body, h2, h3 {
     margin: 0 auto;
 }
 
+h2 {
+    margin-top: 10px;
+}
+
 td h3 a, tr td {
     font-size: 12px !important;
 }
