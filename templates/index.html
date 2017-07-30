@@ -1,6 +1,6 @@
 {% extends "header.html" %}
 {% block content %}
-    <h2 style="text-align: center">{{ current_time() }}</h2>
+	<!-- <h2 style="text-align: center">{{ current_time() }}</h2> -->
     <h2 style="text-align: center">{{ tv_shows|length }} seriálů</h2>
         <div class="tvshows">
             {{ get_data_sorted()|safe}}
