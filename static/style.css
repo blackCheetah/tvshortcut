@@ -85,6 +85,10 @@ div.active {
     opacity: 1;
 }
 
+div.margin-extra {
+    height: 187px;
+}
+
 div.episodes-bg::before{
     content: "no upcoming episodes";
     font-size: 12px;
