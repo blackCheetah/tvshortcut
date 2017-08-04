@@ -9,6 +9,8 @@ from bs4 import BeautifulSoup
 import requests
 import os
 from datetime import datetime
+import time
+
 # import heapq
 # import collections
 # import jinja2
@@ -152,6 +154,7 @@ def get_data(url_link, show_name):
     # Rename content of h2 element with tv show names
     for h2 in tbody.findAll("h2"):
         h2.string = show_name
+        # print(h2)
 
     # Make all "a href" links usable/clickable
     for a in tbody.findAll("a"):
@@ -161,11 +164,18 @@ def get_data(url_link, show_name):
             a['href'] = r"http://www.edna.cz" + a_href
 
     # Make url in data-src the same as for src
+    img_counter = 0
     for img in tbody.findAll("img"):
         data_src = img.get('data-src')
         # src = img.get('src')
         img['data-src'] = r"http://www.edna.cz" + data_src
         img['src'] = r"http://www.edna.cz" + data_src
+        img_counter += 1
+    # print("img_counter: ", img_counter)
+
+    if img_counter < 3:
+        #tbody['class'] = tbody['class'] + 'margin-extra'
+        tbody['class'] = tbody.get('class', []) + ['margin-extra']
 
     # Find date and time of upcoming episode and make it bald
     for td in tbody.findAll("td"):
@@ -186,7 +196,7 @@ def get_data(url_link, show_name):
     for col in tbody.findAll("td", colspan=lambda x: x and x.startswith('5')):
         # print("td_snippet: ", td_snippet.get('id'))
         # print("col: ", col)
-        tbody['class'] = 'episodes-bg active'
+        tbody['class'] = tbody.get('class', []) + ['active']
         break
     else:
         if days_till_release > 0:
@@ -219,6 +229,22 @@ def run_tv_shows():
 # Sort html output by days till release of new episode for each tv show
 def get_data_sorted():
 
+    today = datetime.today()
+    # today:  2017-08-04 20:08:00.963539
+    modified_date = datetime.fromtimestamp(os.path.getmtime('templates/data.html'))
+    # modified_date:  2017-08-04 19:58:00.498725
+    duration = today - modified_date
+    hours = duration.total_seconds() // 3600
+
+    #print("today: ", today)
+    #print("modified_date: ", modified_date)
+    #print("duration.days: ", duration)
+    #print("duration.total_seconds(): ", duration.total_seconds())
+    #print("hours: ", hours)
+
+    if hours < 12.0:
+        return ''
+
     # Function to run through tv shows and parse needed html data
     run_tv_shows()
 
@@ -232,17 +258,27 @@ def get_data_sorted():
     # operator.itemgetter(0)
 
     # append value (html codes) to list "tv_sorted_list" by key in sorted_dict
-    counter = 0
+    # counter = 0
     for key, value in sorted_html_output_dict:
-        counter += 1
+        # counter += 1
         # print("value: ", value)
         tv_sorted_list.append(value)
         # test = ("%02d.Key: %02d" % (counter, key))
         # print(test)
 
+    try:
+        with open("templates/data.html", "w+", encoding='utf-8', errors='ignore') as html_data:
+            results = ''.join(tv_sorted_list)
+            html_data.write(results)
+
+    except FileNotFoundError as fNot:
+        print("Jezuz christ!!! File not found!! \n{0}".format(fNot))
+
+    return ''
+
     # join html codes in tv_sorted_list together and return it all
-    results = ''.join(tv_sorted_list)
-    return results
+    #results = ''.join(tv_sorted_list)
+    #return results
 
 
 # Functions to be callable in "index.html" template
