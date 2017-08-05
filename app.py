@@ -274,6 +274,7 @@ def get_data_sorted():
     except FileNotFoundError as fNot:
         print("Jezuz christ!!! File not found!! \n{0}".format(fNot))
 
+        
     return ''
 
     # join html codes in tv_sorted_list together and return it all
