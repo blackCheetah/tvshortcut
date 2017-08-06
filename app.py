@@ -275,6 +275,7 @@ def get_data_sorted():
     except IOError as e:
         print("Jezuz christ!!! File not found!! \n{0}".format(e))
 
+        
     return ''
 
     # join html codes in tv_sorted_list together and return it all
