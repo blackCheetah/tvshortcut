@@ -245,7 +245,7 @@ def get_data_sorted():
         print("hours: ", hours)
         print("minutes: ", minutes)
 
-        if minutes < 0.5:
+        if hours < 12:
             return ''
 
     # Function to run through tv shows and parse needed html data
