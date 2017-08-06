@@ -229,21 +229,24 @@ def run_tv_shows():
 # Sort html output by days till release of new episode for each tv show
 def get_data_sorted():
 
-    today = datetime.today()
-    # today:  2017-08-04 20:08:00.963539
-    modified_date = datetime.fromtimestamp(os.path.getmtime('templates/data.html'))
-    # modified_date:  2017-08-04 19:58:00.498725
-    duration = today - modified_date
-    hours = duration.total_seconds() // 3600
+    if (os.path.exists("templates/data.html")):
+        today = datetime.today()
+        # today:  2017-08-04 20:08:00.963539
+        modified_date = datetime.fromtimestamp(os.path.getmtime('templates/data.html'))
+        # modified_date:  2017-08-04 19:58:00.498725
+        duration = today - modified_date
+        minutes = duration.total_seconds() // 60
+        hours = duration.total_seconds() // 3600
 
-    #print("today: ", today)
-    #print("modified_date: ", modified_date)
-    #print("duration.days: ", duration)
-    #print("duration.total_seconds(): ", duration.total_seconds())
-    #print("hours: ", hours)
+        #print("today: ", today)
+        print("modified_date: ", modified_date)
+        #print("duration.days: ", duration)
+        #print("duration.total_seconds(): ", duration.total_seconds())
+        print("hours: ", hours)
+        print("minutes: ", minutes)
 
-    if hours < 12.0:
-        return ''
+        if minutes < 0.5:
+            return ''
 
     # Function to run through tv shows and parse needed html data
     run_tv_shows()
@@ -267,7 +270,7 @@ def get_data_sorted():
         # print(test)
 
     try:
-        with open("templates/data.html", "w+", encoding='utf-8', errors='ignore') as html_data:
+        with open(os.path.join("templates/", "data.html"), "w", encoding='utf-8', errors='ignore') as html_data:
             results = ''.join(tv_sorted_list)
             html_data.write(results)
 
