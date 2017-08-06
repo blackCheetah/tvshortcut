@@ -274,9 +274,9 @@ def get_data_sorted():
             results = ''.join(tv_sorted_list)
             html_data.write(results)
 
-    #except FileNotFoundError as fNot:
-    except IOError as e:
-        print("Jezuz christ!!! File not found!! \n{0}".format(e))
+    except FileNotFoundError as fNot:
+    #except IOError as e:
+        print("Jezuz christ!!! File not found!! \n{0}".format(fNot))
 
         
     return ''
