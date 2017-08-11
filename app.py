@@ -19,7 +19,6 @@ import time
 # from queue import Queue
 # from threading import Thread
 
-
 # Declaration of Flask app
 app = Flask(__name__)
 
@@ -135,6 +134,42 @@ def replace_date_format(date_obj):
     return date_string
 
 
+def create_a_file(location, file_name, data_list):
+    try:
+        with open(os.path.join(location, file_name), "w", encoding='utf-8', errors='ignore') as output_file:
+            results = ''.join(data_list)
+            output_file.write(results)
+
+    except FileNotFoundError as fNot:
+    #except IOError as e:
+        print("Jezuz christ!!! File not found!! \n{0}".format(fNot))
+
+
+def file_modified_date(location, file_name):
+    if (os.path.exists(location + "/" + file_name)):
+        today = datetime.today()
+        # today:  2017-08-04 20:08:00.963539
+        modified_date = datetime.fromtimestamp(os.path.getmtime(location + "/" + file_name))
+        # modified_date:  2017-08-04 19:58:00.498725
+        duration = today - modified_date
+        minutes = duration.total_seconds() // 60
+        hours = duration.total_seconds() // 3600
+
+        #print("today: ", today)
+        #print("modified_date: ", modified_date)
+        #print("duration.days: ", duration)
+        #print("duration.total_seconds(): ", duration.total_seconds())
+        #print("hours: ", hours)
+        #print("minutes: ", minutes)
+
+        return hours
+
+    else:
+        #print("test")
+        return -1
+
+
+
 # Function to parse needed HTML data from specific external website
 def get_data(url_link, show_name):
 
@@ -229,24 +264,11 @@ def run_tv_shows():
 # Sort html output by days till release of new episode for each tv show
 def get_data_sorted():
 
-    if (os.path.exists("templates/data.html")):
-        today = datetime.today()
-        # today:  2017-08-04 20:08:00.963539
-        modified_date = datetime.fromtimestamp(os.path.getmtime('templates/data.html'))
-        # modified_date:  2017-08-04 19:58:00.498725
-        duration = today - modified_date
-        minutes = duration.total_seconds() // 60
-        hours = duration.total_seconds() // 3600
+    file_modified = file_modified_date("templates", "data.html")
 
-        #print("today: ", today)
-        print("modified_date: ", modified_date)
-        #print("duration.days: ", duration)
-        #print("duration.total_seconds(): ", duration.total_seconds())
-        print("hours: ", hours)
-        print("minutes: ", minutes)
-
-        if hours < 12:
-            return ''
+    print("file modified: ", file_modified)
+    if file_modified >= 0 and file_modified < 12:
+        return ''
 
     # Function to run through tv shows and parse needed html data
     run_tv_shows()
@@ -269,16 +291,8 @@ def get_data_sorted():
         # test = ("%02d.Key: %02d" % (counter, key))
         # print(test)
 
-    try:
-        with open(os.path.join("templates/", "data.html"), "w", encoding='utf-8', errors='ignore') as html_data:
-            results = ''.join(tv_sorted_list)
-            html_data.write(results)
+    create_a_file("templates/", "data.html", tv_sorted_list)
 
-    except FileNotFoundError as fNot:
-    #except IOError as e:
-        print("Jezuz christ!!! File not found!! \n{0}".format(fNot))
-
-        
     return ''
 
     # join html codes in tv_sorted_list together and return it all
