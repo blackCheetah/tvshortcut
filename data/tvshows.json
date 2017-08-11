@@ -1,0 +1,139 @@
+{
+    "tvShows": [
+        {
+            "name": "Arrow",
+            "new": "",
+            "shortcut": "arrow"
+        },
+        {
+            "name": "The Walking Dead",
+            "new": "",
+            "shortcut": "walking-dead"
+        },
+        {
+            "name": "American Gods",
+            "new": "",
+            "shortcut": "american-gods"
+        },
+        {
+            "name": "The 100",
+            "new": "",
+            "shortcut": "the-hundred"
+        },
+        {
+            "name": "West World",
+            "new": "",
+            "shortcut": "westworld"
+        },
+        {
+            "name": "Marco Polo",
+            "new": "",
+            "shortcut": "marco-polo"
+        },
+        {
+            "name": "Defenders",
+            "new": "",
+            "shortcut": "defenders"
+        },
+        {
+            "name": "Daredevil",
+            "new": "",
+            "shortcut": "daredevil"
+        },
+        {
+            "name": "Narcos",
+            "new": "",
+            "shortcut": "narcos"
+        },
+        {
+            "name": "Mr. Robot",
+            "new": "",
+            "shortcut": "mr-robot"
+        },
+        {
+            "name": "Vikings",
+            "new": "",
+            "shortcut": "vikings"
+        },
+        {
+            "name": "Game of Thrones",
+            "new": "",
+            "shortcut": "game-of-thrones"
+        },
+        {
+            "name": "House of Cards",
+            "new": "",
+            "shortcut": "house-of-cards"
+        },
+        {
+            "name": "Gotham",
+            "new": "",
+            "shortcut": "gotham"
+        },
+        {
+            "name": "Iron Fist",
+            "new": "",
+            "shortcut": "iron-fist"
+        },
+        {
+            "name": "Legends of Tomorrow",
+            "new": "",
+            "shortcut": "legends-of-tomorrow"
+        },
+        {
+            "name": "Supergirl",
+            "new": "",
+            "shortcut": "supergirl"
+        },
+        {
+            "name": "Better Call Saul",
+            "new": "",
+            "shortcut": "better-call-saul"
+        },
+        {
+            "name": "Peaky Blinders",
+            "new": "",
+            "shortcut": "peaky-blinders"
+        },
+        {
+            "name": "Agents of S.H.I.E.L.D.",
+            "new": "",
+            "shortcut": "agents-of-shield"
+        },
+        {
+            "name": "Homeland",
+            "new": "",
+            "shortcut": "homeland"
+        },
+        {
+            "name": "Jessica Jones",
+            "new": "",
+            "shortcut": "jessica-jones"
+        },
+        {
+            "name": "SouthPark",
+            "new": "",
+            "shortcut": "south-park"
+        },
+        {
+            "name": "The Flash",
+            "new": "",
+            "shortcut": "the-flash"
+        },
+        {
+            "name": "Fear the Walking Dead",
+            "new": "",
+            "shortcut": "fear-the-walking-dead"
+        },
+        {
+            "name": "Prison break",
+            "new": "",
+            "shortcut": "prison-break"
+        },
+        {
+            "name": "Luke Cage",
+            "new": "",
+            "shortcut": "luke-cage"
+        }
+    ]
+}
