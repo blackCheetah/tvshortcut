@@ -131,6 +131,9 @@ def replace_date_format(date_obj):
     date_new = datetime(current_date.year, date.month, date.day) - datetime(year=current_date.year, month=current_date.month, day=current_date.day)
     date_string = str(date_new).split(' ', 1)[0]
 
+    if date_string == "0:00:00":
+        date_string = "0"
+
     return date_string
 
 
@@ -222,6 +225,7 @@ def get_data(url_link, show_name):
         break
 
     # Generate days till release of each tv show episode
+
     days_till_release = int(replace_date_format(temp_string))
 
     """if int(days_till_release) < -7:
