@@ -4,13 +4,14 @@
 
 
 # Importing required modules
+import os
+from datetime import datetime
 from flask import Flask, render_template, Markup, url_for
 from bs4 import BeautifulSoup
 import requests
-import os
-from datetime import datetime
-import time
+import json
 
+#import time
 # import heapq
 # import collections
 # import jinja2
@@ -260,9 +261,29 @@ def get_data(url_link, show_name):
 
 
 # Run through tv shows dictionary with show names and url names, parse needed data in function get_data
+
+def load_json(location, file_name):
+    with open(os.path.join(location + "/", file_name), "r", encoding='utf-8', errors='ignore') as output_file:
+        json_load_file = json.load(output_file)
+        #print(json_load_file)
+
+    return json_load_file
+
+
 def run_tv_shows():
-    for show_name, url_name in tv_shows.items():
-        get_data(BASE_URL + url_name, show_name)
+
+    
+    loaded_json = load_json("data", "tvshows.json")
+
+    for i in range(0, len(loaded_json['tvShows'])):
+        tv_show_shortcut = loaded_json['tvShows'][i]['shortcut']
+        tv_show_name = loaded_json['tvShows'][i]['name']
+
+        get_data(BASE_URL + tv_show_shortcut, tv_show_name)
+
+
+    #for show_name, url_name in tv_shows.items():
+    #    get_data(BASE_URL + url_name, show_name)
 
 
 # Sort html output by days till release of new episode for each tv show
