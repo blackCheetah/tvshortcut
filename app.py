@@ -1,24 +1,16 @@
 # App for parsing HTML data from specific external website, showing favourite
 # shows sorted by soonest release date
 # -*- coding: utf-8 -*-
+# !/usr/bin/env
 
 
 # Importing required modules
 import os
 from datetime import datetime
+import json
 from flask import Flask, render_template, Markup, url_for
 from bs4 import BeautifulSoup
 import requests
-import json
-
-#import time
-# import heapq
-# import collections
-# import jinja2
-# import operator
-# import re
-# from queue import Queue
-# from threading import Thread
 
 # Declaration of Flask app
 app = Flask(__name__)
@@ -27,95 +19,12 @@ app = Flask(__name__)
 # Global variables
 # url link to external website
 BASE_URL = r"http://www.edna.cz/"
-# dictionary to store days till release of upcoming episode and it's corresponding html code
-html_output_dict = {}
 
+# dictionary to store days till release of upcoming episode and it's corresponding html code 
+# {days_till_release : html_data}
+HTML_OUTPUT_DICT = {}
 
-# Names of the tv shows and their link; to be manually updated with new tv shows
-tv_shows = {
-    "Arrow":
-    "arrow",
-
-    "Agents of S.H.I.E.L.D.":
-    "agents-of-shield",
-
-    "Better Call Saul":
-    "better-call-saul",
-
-    "Daredevil":
-    "daredevil",
-
-    "Fear the Walking Dead":
-    "fear-the-walking-dead",
-
-    "Game of Thrones":
-    "game-of-thrones",
-
-    "Gotham":
-    "gotham/",
-
-    "Iron Fist":
-    "iron-fist",
-
-    "Jessica Jones":
-    "jessica-jones",
-
-    "Legends of Tomorrow":
-    "legends-of-tomorrow",
-
-    "Luke Cage":
-    "luke-cage",
-
-    "Marco Polo":
-    "marco-polo",
-
-    "Mr. Robot":
-    "mr-robot",
-
-    "Supergirl":
-    "supergirl",
-
-    "Vikings":
-    "vikings",
-
-    "The Flash":
-    "the-flash",
-
-    "The Walking Dead":
-    "walking-dead",
-
-    "Prison break":
-    "prison-break",
-
-    "American Gods (NOVINKA) ":
-    "american-gods",
-
-    "Narcos (NOVINKA) ":
-    "narcos",
-
-    "House of Cards (NOVINKA)":
-    "house-of-cards",
-
-    "Peaky Blinders (NOVINKA)":
-    "peaky-blinders",
-
-    "West World (NOVINKA)":
-    "westworld",
-
-    "Homeland (NOVINKA)":
-    "homeland",
-
-    "The 100 (NOVINKA)":
-    "the-hundred",
-
-    "SouthPark":
-    "south-park",
-
-    "Defenders":
-    "defenders"
-}
-
-
+# Definitions
 # Return current date and time
 def current_time():
     i = datetime.now()
@@ -132,7 +41,8 @@ def replace_date_format(date_obj):
     date_new = datetime(current_date.year, date.month, date.day) - datetime(year=current_date.year, month=current_date.month, day=current_date.day)
     date_string = str(date_new).split(' ', 1)[0]
 
-    if date_string == "0:00:00":
+    # if date_string == "0:00:00":
+    if not date_string:
         date_string = "0"
 
     return date_string
@@ -150,27 +60,20 @@ def create_a_file(location, file_name, data_list):
 
 
 def file_modified_date(location, file_name):
-    if (os.path.exists(location + "/" + file_name)):
+    if os.path.exists(location + "/" + file_name):
         today = datetime.today()
         # today:  2017-08-04 20:08:00.963539
         modified_date = datetime.fromtimestamp(os.path.getmtime(location + "/" + file_name))
+
         # modified_date:  2017-08-04 19:58:00.498725
         duration = today - modified_date
-        minutes = duration.total_seconds() // 60
-        hours = duration.total_seconds() // 3600
 
-        #print("today: ", today)
-        #print("modified_date: ", modified_date)
-        #print("duration.days: ", duration)
-        #print("duration.total_seconds(): ", duration.total_seconds())
-        #print("hours: ", hours)
-        #print("minutes: ", minutes)
+        hours = duration.seconds // 3600
+        minutes = duration.seconds // 60
 
-        return hours
+        return (hours, minutes)
 
-    else:
-        #print("test")
-        return -1
+    return -1
 
 
 
@@ -203,37 +106,39 @@ def get_data(url_link, show_name):
             a['href'] = r"http://www.edna.cz" + a_href
 
     # Make url in data-src the same as for src
-    img_counter = 0
-    for img in tbody.findAll("img"):
+    #img_counter = 0
+    for img_index, img in enumerate(tbody.findAll("img")):
         data_src = img.get('data-src')
         # src = img.get('src')
         img['data-src'] = r"http://www.edna.cz" + data_src
         img['src'] = r"http://www.edna.cz" + data_src
-        img_counter += 1
+        #img_counter += 1
     # print("img_counter: ", img_counter)
 
-    if img_counter < 3:
+    # if img_counter < 3:
+    if img_index < 3:
         #tbody['class'] = tbody['class'] + 'margin-extra'
         tbody['class'] = tbody.get('class', []) + ['margin-extra']
 
     # Find date and time of upcoming episode and make it bald
     for td in tbody.findAll("td"):
         tag = b_soup.new_tag('b')
-        temp_string = td.string
-        td.string = ""
-        tag.string = temp_string
+        newest_episode_text = td.string
+        #td.string = ""
+        #tag.string = temp_string
+        (td.string, tag.string) = ("", td.string)
         td.string.insert_before(tag)
         break
 
     # Generate days till release of each tv show episode
-
-    days_till_release = int(replace_date_format(temp_string))
+    #days_till_release = int(replace_date_format(temp_string))
+    days_till_release = int(replace_date_format(newest_episode_text))
 
     """if int(days_till_release) < -7:
         tbody['class'] = 'episodes-bg disabled'
     """
 
-    for col in tbody.findAll("td", colspan=lambda x: x and x.startswith('5')):
+    for _ in tbody.findAll("td", colspan=lambda x: x and x.startswith('5')):
         # print("td_snippet: ", td_snippet.get('id'))
         # print("col: ", col)
         tbody['class'] = tbody.get('class', []) + ['active']
@@ -248,14 +153,16 @@ def get_data(url_link, show_name):
         snippet_id = int(td_snippet.get('id').replace("snippet--episodes-", ''))
     """
     # Remove unnecessary script at the bottom of the page, saving loading time
-    [x.extract() for x in tbody.findAll('colgroup')]
-    [x.extract() for x in tbody.findAll('td', {"colspan": 8})]
+    for x in tbody.findAll('colgroup'):
+        x.extract()
+    for x in tbody.findAll('td', {"colspan": 8}):
+        x.extract()
 
     # Html output with parsed prettified data
     html_output = Markup(tbody.prettify() + "<br/>")
 
     # append html codes (values) to dictionary html_output_rendered based on days_till_release (keys)
-    html_output_dict[int(days_till_release)] = html_output
+    HTML_OUTPUT_DICT[int(days_till_release)] = html_output
 
     # return html_output
 
@@ -270,17 +177,16 @@ def load_json(location, file_name):
     return json_load_file
 
 
+LOADED_JSON = load_json("data", "tvshows.json")
+NUM_OF_TVSHOWS = len(LOADED_JSON['tvShows'])
+
 def run_tv_shows():
 
-    
-    loaded_json = load_json("data", "tvshows.json")
-
-    for i in range(0, len(loaded_json['tvShows'])):
-        tv_show_shortcut = loaded_json['tvShows'][i]['shortcut']
-        tv_show_name = loaded_json['tvShows'][i]['name']
+    for i in range(0, NUM_OF_TVSHOWS):
+        tv_show_shortcut = LOADED_JSON['tvShows'][i]['shortcut']
+        tv_show_name = LOADED_JSON['tvShows'][i]['name']
 
         get_data(BASE_URL + tv_show_shortcut, tv_show_name)
-
 
     #for show_name, url_name in tv_shows.items():
     #    get_data(BASE_URL + url_name, show_name)
@@ -289,10 +195,14 @@ def run_tv_shows():
 # Sort html output by days till release of new episode for each tv show
 def get_data_sorted():
 
-    file_modified = file_modified_date("templates", "data.html")
+    filename="data.html"
+    file_modified = file_modified_date("templates", filename)
 
-    print("file modified: ", file_modified)
-    if file_modified >= 0 and file_modified < 12:
+    print("# get_data_sorted > {} file has been modified {}h {}m ago "
+        .format(filename, file_modified[0], file_modified[1])
+    )
+    
+    if 12 > file_modified[0] >= 0:
         return ''
 
     # Function to run through tv shows and parse needed html data
@@ -302,14 +212,15 @@ def get_data_sorted():
     tv_sorted_list = []
 
     # sorted dictionary from lowest positive number to lowest negative number
-    sorted_html_output_dict = sorted(html_output_dict.items(), key=lambda x: (x[0] < 0, abs(x[0])), reverse=False)
+    sort_equation = lambda x: (x[0] < 0, abs(x[0]))
+    sorted_html_output_dict = sorted(HTML_OUTPUT_DICT.items(), key=sort_equation, reverse=False)
     # sorted_dict = collections.OrderedDict(sorted(html_output_rendered.items(), key=lambda x: (x[0] < 0, x), reverse=False))
     # key=lambda x: (x[0] < 0, x)
     # operator.itemgetter(0)
 
     # append value (html codes) to list "tv_sorted_list" by key in sorted_dict
     # counter = 0
-    for key, value in sorted_html_output_dict:
+    for _, value in sorted_html_output_dict:
         # counter += 1
         # print("value: ", value)
         tv_sorted_list.append(value)
@@ -327,8 +238,8 @@ def get_data_sorted():
 
 # Functions to be callable in "index.html" template
 app.jinja_env.globals.update(get_data_sorted=get_data_sorted)
+app.jinja_env.globals.update(num_of_tvshows=NUM_OF_TVSHOWS)
 app.jinja_env.globals.update(current_time=current_time)
-app.jinja_env.globals.update(tv_shows=tv_shows)
 # app.jinja_env.globals.update(sorted=sorted)
 # app.jinja_env.globals.update(get_data=get_data)
 # app.add_template_filter(filter_supress_none)
@@ -337,16 +248,14 @@ app.jinja_env.globals.update(tv_shows=tv_shows)
 # Add timestamp for static css, to generate a new cached css on every load
 @app.context_processor
 def override_url_for():
+    def dated_url_for(endpoint, **values):
+        if endpoint == 'static':
+            filename = values.get('filename', None)
+            if filename:
+                file_path = os.path.join(app.root_path, endpoint, filename)
+                values['q'] = int(os.stat(file_path).st_mtime)
+        return url_for(endpoint, **values)
     return dict(url_for=dated_url_for)
-
-
-def dated_url_for(endpoint, **values):
-    if endpoint == 'static':
-        filename = values.get('filename', None)
-        if filename:
-            file_path = os.path.join(app.root_path, endpoint, filename)
-            values['q'] = int(os.stat(file_path).st_mtime)
-    return url_for(endpoint, **values)
 
 
 # Default routing to homepage
