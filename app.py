@@ -73,7 +73,8 @@ def file_modified_date(location, file_name):
 
         return (hours, minutes)
 
-    return -1
+    else:
+        return (-1, -1)
 
 
 
