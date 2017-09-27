@@ -134,6 +134,11 @@
             "name": "Luke Cage",
             "new": "",
             "shortcut": "luke-cage"
+        },
+        {
+            "name" : "Black Mirror",
+            "new" : "",
+            "shortcut": "black-mirror"
         }
     ]
 }
