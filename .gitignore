@@ -5,3 +5,4 @@ venv
 db.sqlite3
 .vscode
 data.html
+experiments
