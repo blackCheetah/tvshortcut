@@ -81,7 +81,6 @@ def file_modified_date(location, file_name):
 def get_data(url_link, show_name):
 
     # Get the html markup from the website and convert it to text
-    print(url_link)
     source_code = requests.get(url_link, timeout=5, verify=False)
     html_text = source_code.text
 
@@ -134,7 +133,6 @@ def get_data(url_link, show_name):
     # Generate days till release of each tv show episode
     #days_till_release = int(replace_date_format(temp_string))
     days_till_release = int(replace_date_format(newest_episode_text))
-    print(days_till_release)
 
     """if int(days_till_release) < -7:
         tbody['class'] = 'episodes-bg disabled'
@@ -189,9 +187,7 @@ def run_tv_shows():
     for i in range(0, NUM_OF_TVSHOWS):
         tv_show_shortcut = LOADED_JSON['tvShows'][i]['shortcut']
         tv_show_name = LOADED_JSON['tvShows'][i]['name']
-
-        print('{}{}'.format(tv_show_shortcut, tv_show_name))
-
+    
         get_data(BASE_URL + tv_show_shortcut, tv_show_name)
 
     #for show_name, url_name in tv_shows.items():
@@ -208,7 +204,7 @@ def get_data_sorted():
         .format(filename, file_modified[0], file_modified[1])
     )
     
-    if 12 < file_modified[0] >= 0:
+    if 12 > file_modified[0] >= 0:
         return ''
 
     # Function to run through tv shows and parse needed html data
@@ -234,7 +230,7 @@ def get_data_sorted():
         # test = ("%02d.Key: %02d" % (counter, key))
         # print(test)
 
-    print(tv_sorted_list)
+    #print(tv_sorted_list)
 
     create_a_file("templates/", "data.html", tv_sorted_list)
 
