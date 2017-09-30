@@ -41,8 +41,7 @@ def replace_date_format(date_obj):
     date_new = datetime(current_date.year, date.month, date.day) - datetime(year=current_date.year, month=current_date.month, day=current_date.day)
     date_string = str(date_new).split(' ', 1)[0]
 
-    # if date_string == "0:00:00":
-    if not date_string:
+    if not date_string or date_string == '0:00:00':
         date_string = "0"
 
     return date_string
