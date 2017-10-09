@@ -106,7 +106,8 @@ def get_data(url_link, show_name):
     # Make all "a href" links usable/clickable
     for a in tbody.findAll(href=True):
         a_href = a.get('href')
-        a['href'] = r"http://www.edna.cz" + a_href
+        if not a['href'].startswith('http://www.'):
+            a['href'] = r"http://www.edna.cz" + a_href
 
     # Make url in data-src the same as for src
     for img_index, img in enumerate(tbody.findAll("img")):
