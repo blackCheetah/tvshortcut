@@ -15,7 +15,6 @@ import requests
 # Declaration of Flask app
 app = Flask(__name__)
 
-
 # Global variables
 # url link to external website
 BASE_URL = r"http://www.edna.cz/"
@@ -33,18 +32,23 @@ def current_time():
     return now
 
 
-# Format date and time and calculate days till release of a new episode
-def replace_date_format(date_obj):
-    date = datetime.strptime(date_obj, '%d.%m. | %H:%M')
+# Format date and current_time
+def replace_date_format(date_string):
+    date = datetime.strptime(date_string, '%d.%m. | %H:%M')
+
+    return date
+
+# Calculate days till release of a new episode
+def days_till_release(date):
     current_date = datetime.now()
 
     date_new = datetime(current_date.year, date.month, date.day) - datetime(year=current_date.year, month=current_date.month, day=current_date.day)
-    date_string = str(date_new).split(' ', 1)[0]
+    date_string = str(date_new).split(' ')[0]
 
     if date_string == '0:00:00':
         date_string = "0"
 
-    return date_string
+    return int(date_string)
 
 
 def create_a_file(location, file_name, data_list):
@@ -54,15 +58,17 @@ def create_a_file(location, file_name, data_list):
             output_file.write(results)
 
     except FileNotFoundError as fNot:
-    #except IOError as e:
         print("Jezuz christ!!! File not found!! \n{0}".format(fNot))
 
 
 def file_modified_date(location, file_name):
-    if os.path.exists(location + "/" + file_name):
+    full_path = os.path.join(location,file_name)
+    
+    if os.path.exists(full_path):
         today = datetime.today()
+
         # today:  2017-08-04 20:08:00.963539
-        modified_date = datetime.fromtimestamp(os.path.getmtime(location + "/" + file_name))
+        modified_date = datetime.fromtimestamp(os.path.getmtime(full_path))
 
         # modified_date:  2017-08-04 19:58:00.498725
         duration = today - modified_date
@@ -96,56 +102,40 @@ def get_data(url_link, show_name):
     # Rename content of h2 element with tv show names
     for h2 in tbody.findAll("h2"):
         h2.string = show_name
-        # print(h2)
 
     # Make all "a href" links usable/clickable
-    for a in tbody.findAll("a"):
+    for a in tbody.findAll(href=True):
         a_href = a.get('href')
-        # print("a_href:", a_href)
-        if url_name in a_href:
-            a['href'] = r"http://www.edna.cz" + a_href
+        a['href'] = r"http://www.edna.cz" + a_href
 
     # Make url in data-src the same as for src
-    #img_counter = 0
     for img_index, img in enumerate(tbody.findAll("img")):
         data_src = img.get('data-src')
-        # src = img.get('src')
         img['data-src'] = r"http://www.edna.cz" + data_src
         img['src'] = r"http://www.edna.cz" + data_src
-        #img_counter += 1
-    # print("img_counter: ", img_counter)
 
-    # if img_counter < 3:
     if img_index < 3:
-        #tbody['class'] = tbody['class'] + 'margin-extra'
         tbody['class'] = tbody.get('class', []) + ['margin-extra']
 
     # Find date and time of upcoming episode and make it bald
     for td in tbody.findAll("td"):
         tag = b_soup.new_tag('b')
-        newest_episode_text = td.string
-        #td.string = ""
-        #tag.string = temp_string
+        newest_episode_date = td.string
         (td.string, tag.string) = ("", td.string)
         td.string.insert_before(tag)
         break
 
     # Generate days till release of each tv show episode
-    #days_till_release = int(replace_date_format(temp_string))
-    days_till_release = int(replace_date_format(newest_episode_text))
+    formatted_date = replace_date_format(newest_episode_date)
+    release_date = days_till_release(formatted_date)
 
-    """if int(days_till_release) < -7:
-        tbody['class'] = 'episodes-bg disabled'
-    """
-
+    # Elements which have td.colspan="5" are active tv shows
     for _ in tbody.findAll("td", colspan=lambda x: x and x.startswith('5')):
-        # print("td_snippet: ", td_snippet.get('id'))
-        # print("col: ", col)
         tbody['class'] = tbody.get('class', []) + ['active']
         break
     else:
-        if days_till_release > 0:
-            days_till_release *= -1
+        if release_date > 0:
+            release_date *= -1
 
     # Get snippet id for each episode
     """for td_snippet in tbody.findAll("td", id=lambda x: x and x.startswith('snippet--episodes-')):
@@ -161,24 +151,18 @@ def get_data(url_link, show_name):
     # Html output with parsed prettified data
     html_output = Markup(tbody.prettify() + "<br/>")
 
-    # append html codes (values) to dictionary html_output_rendered based on days_till_release (keys)
-    
-    HTML_OUTPUT_DICT.setdefault(int(days_till_release), []).append(html_output)
-    #HTML_OUTPUT_DICT[int(days_till_release)] = html_output
+    # append html code (value) to dictionary HTML_OUTPUT_DICT based on release_date (key)
+    HTML_OUTPUT_DICT.setdefault(int(release_date), []).append(html_output)
 
-    # return html_output
-
-
-# Run through tv shows dictionary with show names and url names, parse needed data in function get_data
 
 def load_json(location, file_name):
-    with open(os.path.join(location + "/", file_name), "r", encoding='utf-8', errors='ignore') as output_file:
+    full_path = os.path.join(location, file_name)
+    with open(full_path, "r", encoding='utf-8', errors='ignore') as output_file:
         json_load_file = json.load(output_file)
-        #print(json_load_file)
 
     return json_load_file
 
-
+# Run through tv shows dictionary with show names and url names, parse needed data in function get_data
 LOADED_JSON = load_json("data", "tvshows.json")
 NUM_OF_TVSHOWS = len(LOADED_JSON['tvShows'])
 
@@ -189,9 +173,6 @@ def run_tv_shows():
         tv_show_name = LOADED_JSON['tvShows'][i]['name']
     
         get_data(BASE_URL + tv_show_shortcut, tv_show_name)
-
-    #for show_name, url_name in tv_shows.items():
-    #    get_data(BASE_URL + url_name, show_name)
 
 
 # Sort html output by days till release of new episode for each tv show
@@ -216,39 +197,21 @@ def get_data_sorted():
     # sorted dictionary from lowest positive number to lowest negative number
     sort_equation = lambda x: (x[0] < 0, abs(x[0]))
     sorted_html_output_dict = sorted(HTML_OUTPUT_DICT.items(), key=sort_equation, reverse=False)
-    # sorted_dict = collections.OrderedDict(sorted(html_output_rendered.items(), key=lambda x: (x[0] < 0, x), reverse=False))
-    # key=lambda x: (x[0] < 0, x)
-    # operator.itemgetter(0)
 
     # append value (html codes) to list "tv_sorted_list" by key in sorted_dict
-    # counter = 0
     for _, value in sorted_html_output_dict:
-        # counter += 1
-        # print("value: ", value)
         value = ''.join(value)
         tv_sorted_list.append(value)
-        # test = ("%02d.Key: %02d" % (counter, key))
-        # print(test)
-
-    #print(tv_sorted_list)
 
     create_a_file("templates/", "data.html", tv_sorted_list)
 
     return ''
-
-    # join html codes in tv_sorted_list together and return it all
-    #results = ''.join(tv_sorted_list)
-    #return results
 
 
 # Functions to be callable in "index.html" template
 app.jinja_env.globals.update(get_data_sorted=get_data_sorted)
 app.jinja_env.globals.update(num_of_tvshows=NUM_OF_TVSHOWS)
 app.jinja_env.globals.update(current_time=current_time)
-# app.jinja_env.globals.update(sorted=sorted)
-# app.jinja_env.globals.update(get_data=get_data)
-# app.add_template_filter(filter_supress_none)
-
 
 # Add timestamp for static css, to generate a new cached css on every load
 @app.context_processor
