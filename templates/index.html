@@ -1,8 +1,14 @@
 {% extends "header.html" %}
 {% block content %}
 	<!-- <h2 style="text-align: center">{{ current_time() }}</h2> -->
-    <h2 style="text-align: center">{{ num_of_tvshows }} seriálů</h2>
+    <h2 style="text-align: center">{{ num_of_tvshows }} TV seriálů</h2>
         <div class="tvshows">
+            <div id="tvshows_today" class="episodes-bg margin-extra active">
+                    <table class="episodes">
+                            <tbody id="snippet--episodes tvshows_today">
+                            </tbody>
+                    </table>
+            </div>
             {{ get_data_sorted()|safe|default('', true)}}
             {% include "data.html" %}
         </div>
