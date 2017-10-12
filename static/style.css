@@ -7,7 +7,7 @@ body, h2, h3 {
 }
 
 h2 {
-    margin-top: 10px;
+    margin: 20px;
 }
 
 td h3 a, tr td {
@@ -105,6 +105,11 @@ div.active::before{
     display: none;
     position: absolute;
     margin-top: 16px;
+}
+
+div#tvshows_today{
+    margin: 0 auto;
+    float: none;
 }
 
 td {
