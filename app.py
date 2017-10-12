@@ -17,7 +17,7 @@ app = Flask(__name__)
 
 # Global variables
 # url link to external website
-BASE_URL = r"http://www.edna.cz/"
+BASE_URL = r"https://www.edna.cz/"
 
 # dictionary to store days till release of upcoming episode and it's corresponding html code 
 # {days_till_release : html_data}
@@ -97,7 +97,7 @@ def get_data(url_link, show_name):
     tbody = b_soup.table.parent
 
     # Remove domain name from url
-    url_name = url_link.replace("http://www.edna.cz/", '')
+    url_name = url_link.replace("https://www.edna.cz/", '')
 
     # Rename content of h2 element with tv show names
     for h2 in tbody.findAll("h2"):
@@ -106,14 +106,14 @@ def get_data(url_link, show_name):
     # Make all "a href" links usable/clickable
     for a in tbody.findAll(href=True):
         a_href = a.get('href')
-        if not a['href'].startswith('http://www.'):
-            a['href'] = r"http://www.edna.cz" + a_href
+        if not a['href'].startswith('https://www.'):
+            a['href'] = r"https://www.edna.cz" + a_href
 
     # Make url in data-src the same as for src
     for img_index, img in enumerate(tbody.findAll("img")):
         data_src = img.get('data-src')
-        img['data-src'] = r"http://www.edna.cz" + data_src
-        img['src'] = r"http://www.edna.cz" + data_src
+        img['data-src'] = r"https://www.edna.cz" + data_src
+        img['src'] = r"https://www.edna.cz" + data_src
 
     if img_index < 3:
         tbody['class'] = tbody.get('class', []) + ['margin-extra']
