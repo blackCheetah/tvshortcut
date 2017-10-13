@@ -144,13 +144,12 @@ def get_data(url_link, show_name):
         snippet_id = int(td_snippet.get('id').replace("snippet--episodes-", ''))
     """
     # Remove unnecessary script at the bottom of the page, saving loading time
-    for x in tbody.findAll('colgroup'):
-        x.extract()
-    for x in tbody.findAll('td', {"colspan": 8}):
-        x.extract()
+    [x.extract() for x in tbody.findAll('colgroup')]
+    [x.extract() for x in tbody.findAll('td', {"colspan": 8})]
+    [x.extract() for x in tbody.findAll('br')]
 
     # Html output with parsed prettified data
-    html_output = Markup(tbody.prettify() + "<br/>")
+    html_output = Markup(tbody.prettify())
 
     # append html code (value) to dictionary HTML_OUTPUT_DICT based on release_date (key)
     HTML_OUTPUT_DICT.setdefault(int(release_date), []).append(html_output)
