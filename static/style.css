@@ -108,7 +108,7 @@ div.active::before{
 }
 
 div#tvshows_today{
-    margin: 0 auto;
+    margin: 0 auto 50px auto;
     float: none;
 }
 

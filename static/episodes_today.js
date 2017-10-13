@@ -10,15 +10,9 @@ function episodesReleasedToday() {
     console.log("Current date: " + current_date)
 
     let elements = document.getElementsByTagName("td")
-    // let elements = document.querySelectorAll("td")
-
-    //console.log(elements)
-    //console.log(document.getElementsByTagName('td').values)
 
     let element
     let elementRegex = /(\d){0,2}\.(\d){0,2}\./g;
-
-    //console.log(elements)
 
     // for some reason we have to reverse the loop, otherwise every 2nd "td" element will be skipped.. wtf?
     for (var i = elements.length - 1 ; i >= 0; i--) {
@@ -26,28 +20,35 @@ function episodesReleasedToday() {
         var match = elementRegex.exec(element)
 
         if (match != null ) {
-            episode_date = match[0]
 
-            //console.log(current_date)
-            //console.log(element)
-            //console.log(episode_date)
+            var episode_date = match[0]
 
             if (episode_date == current_date) {
-                //console.log("Today is: " + episode_date)
 
-                // Html code of episode which was released today
-                //console.log(elements[i].parentNode)
-                var test = elements[i].parentNode
-                //var parsed_html_code = test.cloneNode(true)
-                //console.log(parsed_html_code)
-                
-                //console.log(test)
-                
-                // This one does not work properly, it doesnt include parent tags "tr" and "td" correctly
-                //var parsed_html_code = elements[i].parentElement.outerHTML;
-                //console.log(parsed_html_code)
-                //document.getElementById('tvshows_today episodes-bg').innerHTML = elements[i].parentElement.outerHTML
-                document.getElementById('snippet--episodes tvshows_today').appendChild(test)
+                todays_episode_element = elements[i].parentNode.innerHTML
+                todays_episode_node = elements[i].parentNode
+
+                // Hotfix for duplicate elemenets to be skipped. 
+                // kinda hacky way, but hey.. it works :-)
+                if (todays_episode_node.parentNode.id == 'snippet--episodes tvshows_today') {
+                    continue;
+                }
+
+                var title = todays_episode_node.parentNode.parentNode.parentElement.getElementsByTagName('h2')[0].textContent //.getElementsByTagName('h2')[0].innerHTML
+
+                var h2_element = document.createElement('h2')
+                var h2_title_node = document.createTextNode(title)
+                h2_element.appendChild(h2_title_node)
+                var div_tvshows_today = document.getElementById('tvshows_today')
+                div_tvshows_today.appendChild(h2_element)
+
+                var table_element = document.createElement('table')
+                table_element.className = 'episodes'
+                var tbody_element = table_element.createTBody()
+                tbody_element.id = 'snippet--episodes tvshows_today'
+
+                tbody_element.insertAdjacentHTML('afterbegin', todays_episode_element)
+                div_tvshows_today.appendChild(table_element)
             }
 
         }
@@ -56,7 +57,6 @@ function episodesReleasedToday() {
 }
 
 episodesReleasedToday()
-
 
 
 
