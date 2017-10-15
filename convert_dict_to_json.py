@@ -105,7 +105,7 @@ tv_shows = {
 
 def create_a_json_file(location, file_name, json_data):
     try:
-        with open(os.path.join(location + "/" + file_name), "w", encoding='utf-8') as output_file:
+        with open(os.path.join(location, file_name), "w", encoding='utf-8') as output_file:
             output_file.write(json_data)
              #json.dump(json_data, output_file, indent=4, sort_keys=True,  ensure_ascii=False)
 
