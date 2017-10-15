@@ -8,3 +8,8 @@ data.html
 experiments
 _backup_.vscode/settings.json
 .vs
+geckodriver.log
+Procfile
+procfile_bak.txt
+Procfile.windows
+runtime.txt
