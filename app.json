@@ -1,6 +1,7 @@
 {
   "name": "TV Shortcut",
   "description": "Personal list of TV shows extracted from external website in one tidy place ",
+  "url": "https://tvshortcut.herokuapp.com/",
   "image": "heroku/python",
   "repository": "https://github.com/blackCheetah/tvshortcut.herokuapp.com",
   "keywords": ["python", "flask", "django" ],
