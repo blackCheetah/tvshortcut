@@ -6,13 +6,8 @@ import datetime
 # New tv shows to be added
 new_tvshows = [
     {
-        'name' : 'Mindhunter', 
-        'shortcut' : 'mindhunter', 
-        'new':''
-    },
-    {
-        'name' : 'Arrow', 
-        'shortcut' : 'arrow', 
+        'name' : 'The Punisher', 
+        'shortcut' : 'punisher', 
         'new':''
     }
 ]
