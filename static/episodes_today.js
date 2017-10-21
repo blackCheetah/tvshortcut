@@ -24,18 +24,18 @@ function nthParent(element, n) {
 // to show them on homepage
 function episodesReleasedToday() {
 
-    var today = new Date()
-    var dd = today.getDate()
-    var mm = today.getMonth()+1
+    const today = new Date()
+    const dd = today.getDate()
+    const mm = today.getMonth()+1
 
     current_date = dd + '.' + mm + '.'
     console.log("Current date: " + current_date)
 
-    let elements = document.getElementsByTagName("td")
-    let arr = [].slice.call(elements)
+    const td_elements = document.getElementsByTagName("td")
+    const td_array = [].slice.call(td_elements)
 
     // Date format: 5.10., 10.10., 21.10. etc.
-    let elementRegex = /(\d){0,2}\.(\d){0,2}\./g;
+    const date_regex = /(\d){0,2}\.(\d){0,2}\./g;
     
     // arr.forEach(function(element){
     //     elementHtml = element.innerHTML
@@ -43,31 +43,30 @@ function episodesReleasedToday() {
     // });
 
     // Go through all of the "td" elements in html code (array)
-    arr.forEach(function(item) {
-        let element = item.innerHTML
-        let match = elementRegex.exec(element)
+    td_array.forEach(function(td_array_item) {
+        let td_element_html = td_array_item.innerHTML
+        let td_date_match = date_regex.exec(td_element_html)
 
-        if (match != null ) {
+        if (td_date_match != null ) {
 
             // Find the date when episode was released
-            var episode_date = match[0]
+            let episode_date = td_date_match[0]
 
-            // Find class name of TV show which doesnt have any upcoming episodes
-            var elementOuter = nthParent(item, 4).className //item.parentNode.parentNode.parentNode.parentNode.className
-            var elementID = nthParent(item, 4).id //item.parentNode.parentNode.parentNode.parentNode.className
+            // Find class name of each TV show (and its episodes)
+            let div_episodes_class = nthParent(td_array_item, 4).className //item.parentNode.parentNode.parentNode.parentNode.className
 
             // Episode must be released today 
             // and have class "episodes-bg margin-extra active" to be shown on homepage
-            if (episode_date == current_date && elementOuter != 'episodes-bg margin-extra') {
+            if (episode_date == current_date && div_episodes_class == 'episodes-bg margin-extra active') {
 
-                todays_episode_element = item.parentNode.innerHTML
-                todays_episode_node = item.parentNode
+                todays_episode_element = td_array_item.parentNode.innerHTML
+                todays_episode_node = td_array_item.parentNode
 
-                var tvshow_name = todays_episode_node.getElementsByTagName('a').title
+                let tvshow_name = todays_episode_node.getElementsByTagName('a').title
 
                 // Hotfix for duplicate elemenets to be skipped. 
                 // kinda hacky way, but hey.. it works :-)
-                var td_id = 'snippet--episodes {0}'.format(tvshow_name)
+                let td_id = 'snippet--episodes {0}'.format(tvshow_name)
 
                 // If episode is already on homepage, continue with forEach loop
                 if (todays_episode_node.parentNode.id == td_id) {
@@ -75,19 +74,19 @@ function episodesReleasedToday() {
                 }
 
                 // Get name of the TV Show
-                var title = nthParent(todays_episode_node, 3).getElementsByTagName('h2')[0].textContent
+                let title = nthParent(todays_episode_node, 3).getElementsByTagName('h2')[0].textContent
 
                 // Create html elements for TV shows' episode
-                var h2_element = document.createElement('h2')
-                var h2_title_node = document.createTextNode(title)
+                let h2_element = document.createElement('h2')
+                let h2_title_node = document.createTextNode(title)
                 h2_element.appendChild(h2_title_node)
-                var div_tvshows_today = document.getElementById('tvshows_today')
+                let div_tvshows_today = document.getElementById('tvshows_today')
                 div_tvshows_today.appendChild(h2_element)
                 div_tvshows_today.style.marginBottom = '15%'
 
-                var table_element = document.createElement('table')
+                let table_element = document.createElement('table')
                 table_element.className = 'episodes'
-                var tbody_element = table_element.createTBody()
+                let tbody_element = table_element.createTBody()
                 tbody_element.id = 'snippet--episodes {0}'.format(tvshow_name) // should contain name of the episode as ID
 
                 tbody_element.insertAdjacentHTML('afterbegin', todays_episode_element)
