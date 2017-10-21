@@ -56,7 +56,9 @@ function episodesReleasedToday() {
             var elementOuter = nthParent(item, 4).className //item.parentNode.parentNode.parentNode.parentNode.className
             var elementID = nthParent(item, 4).id //item.parentNode.parentNode.parentNode.parentNode.className
 
-            if (episode_date == current_date) {
+            // Episode must be released today 
+            // and have class "episodes-bg margin-extra active" to be shown on homepage
+            if (episode_date == current_date && elementOuter != 'episodes-bg margin-extra') {
 
                 todays_episode_element = item.parentNode.innerHTML
                 todays_episode_node = item.parentNode
