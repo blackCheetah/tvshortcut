@@ -34,33 +34,23 @@ function episodesReleasedToday() {
     const td_elements = document.getElementsByTagName("td")
     const td_array = [].slice.call(td_elements)
 
-    //console.log(td_array)
-
     // Date format: 5.10., 10.10., 21.10. etc.
     const date_regex = /(\d){0,2}\.(\d){0,2}\./g;
     const date_regex2 = /(\d{1,2}\.\d{1,2}\.)/g;
-    
-    // arr.forEach(function(element){
-    //     elementHtml = element.innerHTML
-    //     console.log(elementHtml)
-    // });
 
     // Go through all of the "td" elements in html code (array)
     td_array.forEach(function(td_array_item) {
         let td_element_html = td_array_item.innerHTML
-
-        //console.log(td_element_html);
-        
-
-        //let td_date_match = date_regex2.exec(td_element_html)
         
         var i = 0;
         let td_date_match;
 
         var td_date_statement = false;
 
+        // Search through all matches and break from loop
+        // if match is equal to current day
+        // TODO: what happens if tv shows released more epidoes per day? FIX IT!!
         while ( td_date_match = date_regex2.exec(td_element_html)) {
-            console.log(td_date_match[i])
 
             if (td_date_match != null && td_date_match[i] == current_date) {
                 td_date_statement = true;
@@ -69,8 +59,6 @@ function episodesReleasedToday() {
 
             i += 1
         }
-
-        console.log(td_date_match)
 
         if ( td_date_statement ) {
 
@@ -82,7 +70,6 @@ function episodesReleasedToday() {
 
             // Episode must be released today 
             // and have class "episodes-bg margin-extra active" to be shown on homepage
-
             if ( div_episodes_class.includes('active')) {
 
                 todays_episode_element = td_array_item.parentNode.innerHTML
@@ -90,16 +77,13 @@ function episodesReleasedToday() {
 
                 let tvshow_name = todays_episode_node.getElementsByTagName('a').title
 
-                console.log(tvshow_name)
-
                 // Hotfix for duplicate elemenets to be skipped. 
                 // kinda hacky way, but hey.. it works :-)
                 let td_id = 'snippet--episodes {0}'.format(tvshow_name)
 
                 // If episode is already on homepage, continue with forEach loop
                 if (todays_episode_node.parentNode.id == td_id) {
-                    //return;
-                    console.log('bleh')
+                    return;
                 }
 
                 // Get name of the TV Show
