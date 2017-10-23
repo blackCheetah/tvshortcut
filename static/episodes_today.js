@@ -34,8 +34,11 @@ function episodesReleasedToday() {
     const td_elements = document.getElementsByTagName("td")
     const td_array = [].slice.call(td_elements)
 
+    //console.log(td_array)
+
     // Date format: 5.10., 10.10., 21.10. etc.
     const date_regex = /(\d){0,2}\.(\d){0,2}\./g;
+    const date_regex2 = /(\d{1,2}\.\d{1,2}\.)/g;
     
     // arr.forEach(function(element){
     //     elementHtml = element.innerHTML
@@ -45,9 +48,31 @@ function episodesReleasedToday() {
     // Go through all of the "td" elements in html code (array)
     td_array.forEach(function(td_array_item) {
         let td_element_html = td_array_item.innerHTML
-        let td_date_match = date_regex.exec(td_element_html)
 
-        if (td_date_match != null ) {
+        //console.log(td_element_html);
+        
+
+        //let td_date_match = date_regex2.exec(td_element_html)
+        
+        var i = 0;
+        let td_date_match;
+
+        var td_date_statement = false;
+
+        while ( td_date_match = date_regex2.exec(td_element_html)) {
+            console.log(td_date_match[i])
+
+            if (td_date_match != null && td_date_match[i] == current_date) {
+                td_date_statement = true;
+                break;
+            }
+
+            i += 1
+        }
+
+        console.log(td_date_match)
+
+        if ( td_date_statement ) {
 
             // Find the date when episode was released
             let episode_date = td_date_match[0]
@@ -57,12 +82,15 @@ function episodesReleasedToday() {
 
             // Episode must be released today 
             // and have class "episodes-bg margin-extra active" to be shown on homepage
-            if (episode_date == current_date && div_episodes_class == 'episodes-bg margin-extra active') {
+
+            if ( div_episodes_class.includes('active')) {
 
                 todays_episode_element = td_array_item.parentNode.innerHTML
                 todays_episode_node = td_array_item.parentNode
 
                 let tvshow_name = todays_episode_node.getElementsByTagName('a').title
+
+                console.log(tvshow_name)
 
                 // Hotfix for duplicate elemenets to be skipped. 
                 // kinda hacky way, but hey.. it works :-)
@@ -70,7 +98,8 @@ function episodesReleasedToday() {
 
                 // If episode is already on homepage, continue with forEach loop
                 if (todays_episode_node.parentNode.id == td_id) {
-                    return;
+                    //return;
+                    console.log('bleh')
                 }
 
                 // Get name of the TV Show
