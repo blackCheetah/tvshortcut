@@ -115,7 +115,8 @@ def get_data(url_link, show_name):
         img['data-src'] = r"https://www.edna.cz" + data_src
         img['src'] = r"https://www.edna.cz" + data_src
 
-    if img_index < 3:
+    # 0, 1, 2 => we start at zero, not 1 :-)
+    if img_index < 2:
         tbody['class'] = tbody.get('class', []) + ['margin-extra']
 
     # Find date and time of upcoming episode and make it bald
