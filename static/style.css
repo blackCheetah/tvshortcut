@@ -76,9 +76,9 @@ div.episodes-bg {
     margin-right: 10px;
 }
 
-div.episodes-bg:first-child {
+/* div.episodes-bg:first-child {
     margin-top: 22px;
-}
+} */
 
 div.active {
     /*background-color: f3f1f1;*/
@@ -153,4 +153,21 @@ i.flag-sk {
 }
 .muted {
     opacity: .5;
+}
+
+.sub_tvshows {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+    vertical-align: baseline;
+    clear: both;
+}
+
+@media (max-width: 1236px) {
+    .sub_tvshows {
+        width: 600px;
+        margin: 0 auto;
+    }
 }

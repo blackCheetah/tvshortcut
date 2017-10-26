@@ -4,9 +4,11 @@
     <h2 style="text-align: center">Celkem {{ num_of_tvshows }} seriálů</h2>
     <h2 style="text-align: center">Dnešní epizody</h2>
         <div class="tvshows">
-        <div id="tvshows_today" class="episodes-bg margin-extra active">
-        </div>
-        {{ get_data_sorted()|safe|default('', true)}}
-        {% include "data.html" %}
+            <div id="tvshows_today" class="episodes-bg margin-extra active">
+            </div>
+            {{ get_data_sorted()|safe|default('', true)}}
+                <div class='sub_tvshows'>
+                    {% include "data.html" %}
+                </div>
         </div>
 {% endblock %}
