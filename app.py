@@ -5,23 +5,35 @@
 
 
 # Importing required modules
+from __future__ import print_function
+import sys
+
 import os
 from datetime import datetime
 import json
 from flask import Flask, render_template, Markup, url_for
 from bs4 import BeautifulSoup
 import requests
+import time
+
+import asyncio
+import async_timeout
+import aiohttp
 
 # Declaration of Flask app
 app = Flask(__name__)
 
 # Global variables
-# url link to external website
-BASE_URL = r"https://www.edna.cz/"
 
 # dictionary to store days till release of upcoming episode and it's corresponding html code 
 # {days_till_release : html_data}
 HTML_OUTPUT_DICT = {}
+
+URLS = {}
+
+HEADER = {
+    'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
+}
 
 # Definitions
 # Return current date and time
@@ -82,13 +94,21 @@ def file_modified_date(location, file_name):
         return (-1, -1)
 
 
+async def get_session(session, url):
+    with async_timeout.timeout(10):
+        async with session.get(url, headers=HEADER, timeout=10) as response:
+            return await response.text()
+
+async def get_source_code(url_link, show_name):
+    async with aiohttp.ClientSession() as client_session:
+        source_code = await get_session(client_session, url_link)
+        get_data(url_link, source_code, show_name)
 
 # Function to parse needed HTML data from specific external website
-def get_data(url_link, show_name):
+def get_data(url_link, source_code, show_name):
 
     # Get the html markup from the website and convert it to text
-    source_code = requests.get(url_link, timeout=5, verify=False)
-    html_text = source_code.text
+    html_text = source_code
 
     # Bsoup declaration
     b_soup = BeautifulSoup(html_text, "lxml")
@@ -97,7 +117,7 @@ def get_data(url_link, show_name):
     tbody = b_soup.table.parent
 
     # Remove domain name from url
-    url_name = url_link.replace("https://www.edna.cz/", '')
+    url_link.replace("https://www.edna.cz/", '')
 
     # Rename content of h2 element with tv show names
     for h2 in tbody.findAll("h2"):
@@ -168,12 +188,14 @@ LOADED_JSON = load_json("data", "tvshows.json")
 NUM_OF_TVSHOWS = len(LOADED_JSON['tvShows'])
 
 def run_tv_shows():
+    for _, tvShows in enumerate(LOADED_JSON['tvShows']):
+        tv_show_shortcut = tvShows['shortcut']
+        tv_show_name = tvShows['name']
 
-    for i in range(0, NUM_OF_TVSHOWS):
-        tv_show_shortcut = LOADED_JSON['tvShows'][i]['shortcut']
-        tv_show_name = LOADED_JSON['tvShows'][i]['name']
-    
-        get_data(BASE_URL + tv_show_shortcut, tv_show_name)
+        if tv_show_shortcut in URLS.keys():
+            continue
+        else:
+            URLS.setdefault('https://www.edna.cz/' + tv_show_shortcut, tv_show_name)
 
 
 # Sort html output by days till release of new episode for each tv show
@@ -190,7 +212,7 @@ def get_data_sorted():
         return ''
 
     # Function to run through tv shows and parse needed html data
-    run_tv_shows()
+    run_script()
 
     # sorted list of strings with html codes for each episode
     tv_sorted_list = []
@@ -207,6 +229,19 @@ def get_data_sorted():
     create_a_file("templates/", "data.html", tv_sorted_list)
 
     return ''
+
+def run_script(): 
+
+    run_tv_shows()
+
+    start_time = time.time()
+
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    f = asyncio.wait([get_source_code(url, show_name) for url, show_name in URLS.items()])
+    loop.run_until_complete(f)
+
+    print('{}'.format('Script done in: ').ljust(20) + '{}'.format(time.time() - start_time), file=sys.stderr)
 
 
 # Functions to be callable in "index.html" template
@@ -236,4 +271,6 @@ def index():
 
 # Running app locally with cpu threads for faster results
 if __name__ == '__main__':
-    app.run(threaded=True, debug=True)
+    app.run(threaded=True, debug=True) 
+    # Localhost and debug
+    # app.run(host='127.0.0.1', port=5000, threaded=True, debug=True)
