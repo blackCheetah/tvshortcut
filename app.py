@@ -5,16 +5,13 @@
 
 
 # Importing required modules
-from __future__ import print_function
-import sys
-
 import os
 from datetime import datetime
 import json
+import time
 from flask import Flask, render_template, Markup, url_for
 from bs4 import BeautifulSoup
-import requests
-import time
+#import requests
 
 import asyncio
 import async_timeout
@@ -241,7 +238,7 @@ def run_script():
     f = asyncio.wait([get_source_code(url, show_name) for url, show_name in URLS.items()])
     loop.run_until_complete(f)
 
-    print('{}'.format('Script done in: ').ljust(20) + '{}'.format(time.time() - start_time), file=sys.stderr)
+    print('{}'.format('Script done in: ').ljust(20) + '{}'.format(time.time() - start_time))
 
 
 # Functions to be callable in "index.html" template
