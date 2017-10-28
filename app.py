@@ -3,7 +3,6 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/env
 
-
 # Importing required modules
 import os
 from datetime import datetime
