@@ -1,5 +1,8 @@
 /*********************************************************** 
     On homepage, show episodes which were released today
+    and will be released tomorrow
+
+    __version__ = 'v0.1.6'
 
 ************************************************************/
 
@@ -22,13 +25,9 @@ function nthParent(element, n) {
 
 // Check which episodes were released today and create html elements
 // to show them on homepage
-function episodesReleasedToday() {
+function episodesReleasedToday(day, month, today) {
 
-    const today = new Date()
-    const dd = today.getDate()
-    const mm = today.getMonth()+1
-
-    current_date = dd + '.' + mm + '.'
+    current_date = day + '.' + month + '. '
     console.log("Current date: " + current_date)
 
     const td_elements = document.getElementsByTagName("td")
@@ -36,11 +35,13 @@ function episodesReleasedToday() {
 
     // Date format: 5.10., 10.10., 21.10. etc.
     const date_regex = /(\d){0,2}\.(\d){0,2}\./g;
-    const date_regex2 = /(\d{1,2}\.\d{1,2}\.)/g;
+    const date_regex2 = /(\d{1,2}\.\d{1,2}\.) /g;
 
     // Go through all of the "td" elements in html code (array)
     td_array.forEach(function(td_array_item) {
         let td_element_html = td_array_item.innerHTML
+
+        //console.log(td_element_html)
         
         var i = 0;
         let td_date_match;
@@ -75,27 +76,45 @@ function episodesReleasedToday() {
                 todays_episode_element = td_array_item.parentNode.innerHTML
                 todays_episode_node = td_array_item.parentNode
 
-                let tvshow_name = todays_episode_node.getElementsByTagName('a').title
+                //console.log("todays_episode_node.id: ", todays_episode_node.parentNode)
+
+                let tvshow_name = todays_episode_node.getElementsByTagName('a')[0].getAttribute('title')
+
+                //console.log('tvshow_name: ', tvshow_name)
 
                 // Hotfix for duplicate elemenets to be skipped. 
                 // kinda hacky way, but hey.. it works :-)
-                let td_id = 'snippet--episodes {0}'.format(tvshow_name)
+                //let td_id = 'snippet--episodes {0}'.format(tvshow_name)
 
                 // If episode is already on homepage, continue with forEach loop
-                if (todays_episode_node.parentNode.id == td_id) {
-                    return;
-                }
+                //console.log('td_id: ', td_id)
+                //console.log('todays_episode_node.parentNode.id: ', todays_episode_node.parentNode.getAttribute('id'))
+                // if (todays_episode_node.parentNode.id == td_id) {
+                //     return;
+                // }
 
                 // Get name of the TV Show
                 let title = nthParent(todays_episode_node, 3).getElementsByTagName('h2')[0].textContent
+
+                var tvshows_div_name = ''
+                var margin = ''
+
+                if (today == true) {
+                    tvshows_div_name = 'tvshows_today'
+                    margin = '0'
+
+                } else {
+                    tvshows_div_name = 'tvshows_tomorrow'
+                    margin = '15%'
+                }
 
                 // Create html elements for TV shows' episode
                 let h2_element = document.createElement('h2')
                 let h2_title_node = document.createTextNode(title)
                 h2_element.appendChild(h2_title_node)
-                let div_tvshows_today = document.getElementById('tvshows_today')
+                let div_tvshows_today = document.getElementById(tvshows_div_name)
                 div_tvshows_today.appendChild(h2_element)
-                div_tvshows_today.style.marginBottom = '15%'
+                div_tvshows_today.style.marginBottom = margin
 
                 let table_element = document.createElement('table')
                 table_element.className = 'episodes'
@@ -110,7 +129,18 @@ function episodesReleasedToday() {
 
 }
 
-episodesReleasedToday()
+var today = new Date()
+var current_date = today.getDate()
+var current_month = today.getMonth()+1
+
+today.setDate(today.getDate() + 1)
+var tomorrow_date = today.getDate()
+var tomorrow_month = today.getMonth()+1
+
+var today = true
+
+episodesReleasedToday(current_date, current_month, today)
+episodesReleasedToday(tomorrow_date, tomorrow_month, today = false)
 
 
 
