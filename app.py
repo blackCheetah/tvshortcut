@@ -204,7 +204,7 @@ def get_data_sorted():
         .format(filename, file_modified[0], file_modified[1])
     )
     
-    if 12 > file_modified[0] >= 0:
+    if 8 > file_modified[0] >= 0:
         return ''
 
     # Function to run through tv shows and parse needed html data
