@@ -1,0 +1,5 @@
+venv\Scripts\Activate.bat
+py app.py
+
+py -m pip install <name_of_dependency>
+py -m pip freeze > requirements.txt
