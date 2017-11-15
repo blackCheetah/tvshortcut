@@ -70,7 +70,7 @@ function episodesReleasedToday(day, month, today) {
             let div_episodes_class = nthParent(td_array_item, 4).className //item.parentNode.parentNode.parentNode.parentNode.className
 
             // Episode must be released today 
-            // and have class "episodes-bg margin-extra active" to be shown on homepage
+            // and have class "episodes-bg active" to be shown on homepage
             if ( div_episodes_class.includes('active')) {
 
                 todays_episode_element = td_array_item.parentNode.innerHTML
