@@ -107,6 +107,10 @@ div.active::before{
     margin-top: 16px;
 }
 
+div.top_headings {
+    margin-top: 5em;
+}
+
 div#tvshows_today,
 div#tvshows_tomorrow{
     margin: 0 auto;
