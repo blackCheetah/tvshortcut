@@ -107,7 +107,7 @@ div.active::before{
     margin-top: 16px;
 }
 
-div.top_headings {
+h2.top_headings {
     margin-top: 5em;
 }
 
