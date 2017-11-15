@@ -46,11 +46,20 @@ def replace_date_format(date_string):
 
     return date
 
+# Format date and current_time
+def replace_date_format_with_year(date_string):
+    date = datetime.strptime(date_string, '%d.%m.%Y | %H:%M')
+
+    return date
+
 # Calculate days till release of a new episode
 def days_till_release(date):
     current_date = datetime.now()
 
-    date_new = datetime(current_date.year, date.month, date.day) - datetime(year=current_date.year, month=current_date.month, day=current_date.day)
+    if not date.year:
+        date.year = current_date.year
+
+    date_new = datetime(date.year, date.month, date.day) - datetime(year=current_date.year, month=current_date.month, day=current_date.day)
     date_string = str(date_new).split(' ')[0]
 
     if date_string == '0:00:00':
@@ -135,31 +144,46 @@ def get_data(url_link, source_code, show_name):
     if img_index < 2:
         tbody['class'] = tbody.get('class', []) + ['margin-extra']
 
-    # Find date and time of upcoming episode and make it bald
-    for td in tbody.findAll("td"):
-        tag = b_soup.new_tag('b')
-        newest_episode_date = td.string
-        (td.string, tag.string) = ("", td.string)
-        td.string.insert_before(tag)
-        break
-
-    # Generate days till release of each tv show episode
-    formatted_date = replace_date_format(newest_episode_date)
-    release_date = days_till_release(formatted_date)
-
+    # Find date and time of upcoming episode, make the date bold (with <b> tags) and calculate
+    # days till release of a new episode
     # Elements which have td.colspan="5" are active tv shows
-    for _ in tbody.findAll("td", colspan=lambda x: x and x.startswith('5')):
+    tbody_td_colspan = tbody.find('td', colspan='5')
+    tbody_first_td = tbody.find('td')
+
+    if tbody_td_colspan:
         tbody['class'] = tbody.get('class', []) + ['active']
-        break
+        newest_episode_date = tbody_td_colspan.string
+        formatted_date = replace_date_format_with_year(newest_episode_date)
+        release_date = days_till_release(formatted_date)
     else:
+        newest_episode_date = tbody_first_td.string
+        formatted_date = replace_date_format(newest_episode_date)
+        release_date = days_till_release(formatted_date)
         if release_date > 0:
             release_date *= -1
 
-    # Get snippet id for each episode
-    """for td_snippet in tbody.findAll("td", id=lambda x: x and x.startswith('snippet--episodes-')):
-        # print("td_snippet: ", td_snippet.get('id'))
-        snippet_id = int(td_snippet.get('id').replace("snippet--episodes-", ''))
-    """
+    tag = b_soup.new_tag('b')
+    (tbody_first_td.string, tag.string) = ("", tbody_first_td.string)
+    tbody_first_td.string.insert_before(tag)
+
+    # for td in tbody.findAll("td"):
+    #     tag = b_soup.new_tag('b')
+    #     newest_episode_date = td.string
+    #     (td.string, tag.string) = ("", td.string)
+    #     td.string.insert_before(tag)
+    #     break
+
+    # # Generate days till release of each tv show episode
+    # release_date = days_till_release(formatted_date)
+
+    # # Elements which have td.colspan="5" are active tv shows
+    # for _ in tbody.findAll("td", colspan=lambda x: x and x.startswith('5')):
+    #     tbody['class'] = tbody.get('class', []) + ['active']
+    #     break
+    # else:
+    #     if release_date > 0:
+    #         release_date *= -1
+
     # Remove unnecessary script at the bottom of the page, saving loading time
     [x.extract() for x in tbody.findAll('colgroup')]
     [x.extract() for x in tbody.findAll('td', {"colspan": 8})]
@@ -204,7 +228,7 @@ def get_data_sorted():
         .format(filename, file_modified[0], file_modified[1])
     )
     
-    if 8 > file_modified[0] >= 0:
+    if 0 > file_modified[0] >= 0:
         return ''
 
     # Function to run through tv shows and parse needed html data
