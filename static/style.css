@@ -10,6 +10,14 @@ h2 {
     margin: 20px;
 }
 
+h2#num_of_tvshows {
+    text-align: center;
+    background-color: #49198c;
+    padding: 20px;
+    margin: 0;
+    color: white;
+}
+
 td h3 a, tr td {
     font-size: 12px !important;
 }
@@ -108,7 +116,13 @@ div.active::before{
 }
 
 h2.top_headings {
-    margin-top: 5em;
+    text-align: center;
+    max-width: 35em;
+    margin: 3em auto;
+    background-color: #49198c;
+    padding: 20px;
+    color: white;
+    border-radius: 5px;
 }
 
 div#tvshows_today,
