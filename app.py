@@ -56,16 +56,19 @@ def replace_date_format_with_year(date_string):
 def days_till_release(date):
     current_date = datetime.now()
 
-    if not date.year:
-        date.year = current_date.year
+    if date.year == 1900:
+        date = date.replace(year=current_date.year)
 
-    date_new = datetime(date.year, date.month, date.day) - datetime(year=current_date.year, month=current_date.month, day=current_date.day)
-    date_string = str(date_new).split(' ')[0]
+    if date.hour:
+        date_show = datetime(date.year, date.month, date.day, date.hour).timestamp()
+        date_now = datetime(year=current_date.year, month=current_date.month, day=current_date.day, hour=current_date.hour).timestamp()
+        date_new = date_show - date_now
+    else:
+        date_show = datetime(date.year, date.month, date.day).timestamp()
+        date_now = datetime(year=current_date.year, month=current_date.month, day=current_date.day).timestamp()
+        date_new = date_show - date_now
 
-    if date_string == '0:00:00':
-        date_string = "0"
-
-    return int(date_string)
+    return int(date_new)
 
 
 def create_a_file(location, file_name, data_list):
@@ -155,11 +158,19 @@ def get_data(url_link, source_code, show_name):
         newest_episode_date = tbody_td_colspan.string
         formatted_date = replace_date_format_with_year(newest_episode_date)
         release_date = days_till_release(formatted_date)
+
     else:
         newest_episode_date = tbody_first_td.string
         formatted_date = replace_date_format(newest_episode_date)
         release_date = days_till_release(formatted_date)
-        if release_date > 1:
+
+        # Number: -86400 is equal to 24 hours:
+        # 3600 sec * 24 hours = 86400
+        if release_date >= -86400:
+           tbody['class'] = tbody.get('class', []) + ['active']
+           release_date = 0
+
+        if release_date > 0:
             release_date *= -1
 
     tag = b_soup.new_tag('b')
