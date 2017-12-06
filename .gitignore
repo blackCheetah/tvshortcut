@@ -10,3 +10,5 @@ _backup_.vscode/settings.json
 .vs
 geckodriver.log
 procfile_bak.txt
+_backup/backup_app.py
+tvshortcut.bat
