@@ -159,7 +159,7 @@ def get_data(url_link, source_code, show_name):
         newest_episode_date = tbody_first_td.string
         formatted_date = replace_date_format(newest_episode_date)
         release_date = days_till_release(formatted_date)
-        if release_date > 0:
+        if release_date > 1:
             release_date *= -1
 
     tag = b_soup.new_tag('b')
