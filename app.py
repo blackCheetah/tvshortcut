@@ -134,10 +134,11 @@ def get_data(url_link, source_code, show_name):
     # Make all "a href" links usable/clickable
     for a in tbody.findAll(href=True):
         a_href = a.get('href')
-        if not a['href'].startswith('http://www.'):
+        if not a['href'].startswith('http'):
             a['href'] = r"https://www.edna.cz" + a_href
 
     # Make url in data-src the same as for src
+    img_index = 0
     for img_index, img in enumerate(tbody.findAll("img")):
         data_src = img.get('data-src')
         img['data-src'] = r"https://www.edna.cz" + data_src
