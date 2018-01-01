@@ -57,7 +57,7 @@ def days_till_release(date):
     current_date = datetime.now()
 
     if date.year == 1900:
-        date = date.replace(year=current_date.year)
+        date = date.replace(year=current_date.year - 1)
 
     if date.hour:
         date_show = datetime(date.year, date.month, date.day, date.hour).timestamp()
