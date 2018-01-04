@@ -6,8 +6,8 @@ import datetime
 # New tv shows to be added
 new_tvshows = [
     {
-        'name' : 'Spartacus', 
-        'shortcut' : 'spartacus', 
+        'name' : 'Knightfall', 
+        'shortcut' : 'knightfall', 
         'new':''
     }
 ]
