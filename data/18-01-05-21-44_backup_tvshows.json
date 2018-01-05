@@ -159,11 +159,6 @@
             "name": "Knightfall",
             "new": "",
             "shortcut": "knightfall"
-        },
-        {
-            "name": "Black Lightning",
-            "new": "",
-            "shortcut": "black-lightning"
         }
     ]
 }
