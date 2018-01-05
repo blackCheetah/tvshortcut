@@ -1,11 +1,11 @@
 {% extends "header.html" %}
 {% block content %}
-    <h2 id='num_of_tvshows' style="text-align: center">Celkem {{ num_of_tvshows }} seriálů</h2>
+    <h2 id='num_of_tvshows' style="text-align: center">List of {{ num_of_tvshows }} favourite TV Shows</h2>
         <div class="tvshows">
-            <h2 class="top_headings" style="text-align: center">Dnešní epizody</h2>
+            <h2 class="top_headings" style="text-align: center">Episodes airing today</h2>
             <div id="tvshows_today" class="episodes-bg active">
             </div>
-            <h2 class="top_headings" style="text-align: center">Zítřejší epizody</h2>
+            <h2 class="top_headings" style="text-align: center">Episodes coming out tomorrow</h2>
             <div id="tvshows_tomorrow" class="episodes-bg active">
             </div>
             {{ get_data_sorted()|safe|default('', true)}}
