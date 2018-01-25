@@ -59,6 +59,11 @@ def days_till_release(date):
     if date.year == 1900:
         date = date.replace(year=current_date.year - 1)
 
+    # not a clever solution, but I'm working with data I got... :-(
+    # edna please add year field next to day and month for every tv show, pls???
+    if current_date.day == date.day and current_date.month == date.month:
+        date = date.replace(year=current_date.year)
+    
     if date.hour:
         date_show = datetime(date.year, date.month, date.day, date.hour).timestamp()
         date_now = datetime(year=current_date.year, month=current_date.month, day=current_date.day, hour=current_date.hour).timestamp()
@@ -167,6 +172,7 @@ def get_data(url_link, source_code, show_name):
 
         # Number: -86400 is equal to 24 hours:
         # 3600 sec * 24 hours = 86400
+        print(f"formatted_date: {formatted_date} \t| release_date: {release_date} \t| show_name: {show_name}")
         if release_date >= -86400:
            tbody['class'] = tbody.get('class', []) + ['active']
            release_date = 0
