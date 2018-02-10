@@ -1,3 +1,8 @@
+"""
+    Script which is used to add a new tvshow to the favourite list of tvshows:
+    tvshows.json
+"""
+
 import json
 import os
 import shutil
@@ -6,8 +11,8 @@ import datetime
 # New tv shows to be added
 new_tvshows = [
     {
-        'name' : 'Black Lightning', 
-        'shortcut' : 'black-lightning', 
+        'name' : 'Altered Carbon',
+        'shortcut' : 'altered-carbon',
         'new':''
     }
 ]
@@ -17,7 +22,7 @@ now = datetime.datetime.now().strftime('%y-%m-%d-%H-%M')
 
 # Location to json files (original and backup)
 tvshows_loc = os.path.join('data', 'tvshows.json')
-tvshows_loc_backup = os.path.join('data', '{}_backup_tvshows.json'.format(now))
+tvshows_loc_backup = os.path.join('data', f'{now}_backup_tvshows.json')
 
 # Make a backup of the original json file first
 shutil.copyfile(tvshows_loc, tvshows_loc_backup)
@@ -48,5 +53,3 @@ with open(tvshows_loc, 'w') as json_file:
 # Print out new json data with recently added tv show
 new_data = json.dumps(json_data, indent=4, sort_keys=True, ensure_ascii=False)
 print(new_data)
-
-

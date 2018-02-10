@@ -1,59 +1,60 @@
-# App for parsing HTML data from specific external website, showing favourite
-# shows sorted by soonest release date
 # -*- coding: utf-8 -*-
 # !/usr/bin/env
+
+"""
+    App for parsing HTML data from specific external website, showing favourite.
+    TV Shows are sorted by the earliest release date.
+"""
 
 # Importing required modules
 import os
 from datetime import datetime
 import json
 import time
-from flask import Flask, render_template, Markup, url_for
-from bs4 import BeautifulSoup
-#import requests
-
 import asyncio
 import async_timeout
 import aiohttp
+from flask import Flask, render_template, Markup, url_for
+from bs4 import BeautifulSoup
 
 # Declaration of Flask app
 app = Flask(__name__)
 
 # Global variables
 
-# dictionary to store days till release of upcoming episode and it's corresponding html code 
+# dictionary to store days till release of upcoming episode and it's corresponding html code
 # {days_till_release : html_data}
 HTML_OUTPUT_DICT = {}
 
 URLS = {}
 
 HEADER = {
-    'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
+    'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
+    AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
 }
 
 # Definitions
-# Return current date and time
 def current_time():
+    """ Return current date and time """
     i = datetime.now()
     now = ("%d.%d.%d | %d:%02d" % (i.day, i.month, i.year, i.hour, i.minute))
 
     return now
 
-
-# Format date and current_time
 def replace_date_format(date_string):
+    """ Return date in format without the year """
     date = datetime.strptime(date_string, '%d.%m. | %H:%M')
 
     return date
 
-# Format date and current_time
 def replace_date_format_with_year(date_string):
+    """ Return date in format which contains year """
     date = datetime.strptime(date_string, '%d.%m.%Y | %H:%M')
 
     return date
 
-# Calculate days till release of a new episode
 def days_till_release(date):
+    """ Calculate days till release of a new episode """
     current_date = datetime.now()
 
     if date.year == 1900:
@@ -63,20 +64,30 @@ def days_till_release(date):
     # edna please add year field next to day and month for every tv show, pls???
     if current_date.day == date.day and current_date.month == date.month:
         date = date.replace(year=current_date.year)
-    
+
     if date.hour:
         date_show = datetime(date.year, date.month, date.day, date.hour).timestamp()
-        date_now = datetime(year=current_date.year, month=current_date.month, day=current_date.day, hour=current_date.hour).timestamp()
+        date_now = datetime(
+            year=current_date.year,
+            month=current_date.month,
+            day=current_date.day,
+            hour=current_date.hour
+            ).timestamp()
         date_new = date_show - date_now
     else:
         date_show = datetime(date.year, date.month, date.day).timestamp()
-        date_now = datetime(year=current_date.year, month=current_date.month, day=current_date.day).timestamp()
+        date_now = datetime(
+            year=current_date.year,
+            month=current_date.month,
+            day=current_date.day
+            ).timestamp()
         date_new = date_show - date_now
 
     return int(date_new)
 
 
 def create_a_file(location, file_name, data_list):
+    """ Creates a file in given location, file name and list of data """
     try:
         with open(os.path.join(location, file_name), "w", encoding='utf-8', errors='ignore') as output_file:
             results = ''.join(data_list)
@@ -87,8 +98,12 @@ def create_a_file(location, file_name, data_list):
 
 
 def file_modified_date(location, file_name):
-    full_path = os.path.join(location,file_name)
-    
+    """
+        Checks the modified date of given file.
+        Returns when file was modified in hours and minutes
+    """
+    full_path = os.path.join(location, file_name)
+
     if os.path.exists(full_path):
         today = datetime.today()
 
@@ -102,23 +117,27 @@ def file_modified_date(location, file_name):
         minutes = duration.seconds // 60
 
         return (hours, minutes)
-
     else:
         return (-1, -1)
 
 
 async def get_session(session, url):
+    """ Opens an url and gets the source code (html) from it. """
     with async_timeout.timeout(10):
         async with session.get(url, headers=HEADER, timeout=10) as response:
             return await response.text()
 
 async def get_source_code(url_link, show_name):
+    """
+        Call async function to get a source code from all websites listed in
+        tvshows.json file
+    """
     async with aiohttp.ClientSession() as client_session:
         source_code = await get_session(client_session, url_link)
         get_data(url_link, source_code, show_name)
 
-# Function to parse needed HTML data from specific external website
 def get_data(url_link, source_code, show_name):
+    """ Function to parse needed HTML data from specific external website """
 
     # Get the html markup from the website and convert it to text
     html_text = source_code
@@ -172,10 +191,14 @@ def get_data(url_link, source_code, show_name):
 
         # Number: -86400 is equal to 24 hours:
         # 3600 sec * 24 hours = 86400
-        print(f"formatted_date: {formatted_date} \t| release_date: {release_date} \t| show_name: {show_name}")
+        print(
+            f"formatted_date: {formatted_date} \t \
+            | release_date: {release_date} \t \
+            | show_name: {show_name}"
+        )
         if release_date >= -86400:
-           tbody['class'] = tbody.get('class', []) + ['active']
-           release_date = 0
+            tbody['class'] = tbody.get('class', []) + ['active']
+            release_date = 0
 
         if release_date > 0:
             release_date *= -1
@@ -215,17 +238,28 @@ def get_data(url_link, source_code, show_name):
 
 
 def load_json(location, file_name):
+    """
+        Load .json file based on given location and file name
+        and return its content
+    """
     full_path = os.path.join(location, file_name)
     with open(full_path, "r", encoding='utf-8', errors='ignore') as output_file:
         json_load_file = json.load(output_file)
 
     return json_load_file
 
-# Run through tv shows dictionary with show names and url names, parse needed data in function get_data
+# Run through tv shows dictionary with show names and url names,
+# parse needed data in function get_data
 LOADED_JSON = load_json("data", "tvshows.json")
 NUM_OF_TVSHOWS = len(LOADED_JSON['tvShows'])
 
 def run_tv_shows():
+    """
+        Go through tvshows in "LOADED_JSON" variable,
+        append domain "https://www.edna.cz/ before its url
+        and save it together with name of the TV show in the
+        dictionary "URL".
+    """
     for _, tvShows in enumerate(LOADED_JSON['tvShows']):
         tv_show_shortcut = tvShows['shortcut']
         tv_show_name = tvShows['name']
@@ -235,17 +269,17 @@ def run_tv_shows():
         else:
             URLS.setdefault('https://www.edna.cz/' + tv_show_shortcut, tv_show_name)
 
-
-# Sort html output by days till release of new episode for each tv show
 def get_data_sorted():
-
-    filename="data.html"
+    """ Sort html output by days till release of new episode for each tv show """
+    filename = "data.html"
     file_modified = file_modified_date("templates", filename)
 
-    print("# get_data_sorted > {} file has been modified {}h {}m ago "
-        .format(filename, file_modified[0], file_modified[1])
+    print(
+        f"# get_data_sorted > {filename} file has been modified \
+        {file_modified[0]}h \
+        {file_modified[1]}m ago"
     )
-    
+
     if 8 > file_modified[0] >= 0:
         return ''
 
@@ -268,8 +302,8 @@ def get_data_sorted():
 
     return ''
 
-def run_script(): 
-
+def run_script():
+    """ Run the whole script using asyncio for faster results """
     run_tv_shows()
 
     start_time = time.time()
@@ -287,10 +321,11 @@ app.jinja_env.globals.update(get_data_sorted=get_data_sorted)
 app.jinja_env.globals.update(num_of_tvshows=NUM_OF_TVSHOWS)
 app.jinja_env.globals.update(current_time=current_time)
 
-# Add timestamp for static css, to generate a new cached css on every load
 @app.context_processor
 def override_url_for():
+    """ Add timestamp for static css, to generate a new cached css on every load """
     def dated_url_for(endpoint, **values):
+        """ Add timestamp for static css, to generate a new cached css on every load """
         if endpoint == 'static':
             filename = values.get('filename', None)
             if filename:
@@ -303,12 +338,12 @@ def override_url_for():
 # Default routing to homepage
 @app.route('/')
 def index():
-    # Rendering content of "index.html"
+    """ Rendering content of "index.html" on homepage """
     return render_template("index.html")
 
 
 # Running app locally with cpu threads for faster results
 if __name__ == '__main__':
-    app.run(threaded=True, debug=True) 
+    app.run(threaded=True, debug=True)
     # Localhost and debug
     # app.run(host='127.0.0.1', port=5000, threaded=True, debug=True)
