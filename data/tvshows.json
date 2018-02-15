@@ -16,11 +16,6 @@
             "shortcut": "american-gods"
         },
         {
-            "name": "The 100",
-            "new": "",
-            "shortcut": "the-hundred"
-        },
-        {
             "name": "West World",
             "new": "",
             "shortcut": "westworld"
@@ -61,11 +56,6 @@
             "shortcut": "game-of-thrones"
         },
         {
-            "name": "House of Cards",
-            "new": "",
-            "shortcut": "house-of-cards"
-        },
-        {
             "name": "Gotham",
             "new": "",
             "shortcut": "gotham"
@@ -99,11 +89,6 @@
             "name": "Agents of S.H.I.E.L.D.",
             "new": "",
             "shortcut": "agents-of-shield"
-        },
-        {
-            "name": "Homeland",
-            "new": "",
-            "shortcut": "homeland"
         },
         {
             "name": "Jessica Jones",
