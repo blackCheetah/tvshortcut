@@ -75,12 +75,10 @@ function episodesReleasedToday(day, month, today) {
 
                 todays_episode_element = td_array_item.parentNode.innerHTML
                 todays_episode_node = td_array_item.parentNode
-
-                //console.log("todays_episode_node.id: ", todays_episode_node.parentNode)
+                console.log("todays_episode_node: ", todays_episode_node);
 
                 let tvshow_name = todays_episode_node.getElementsByTagName('a')[0].getAttribute('title')
-
-                //console.log('tvshow_name: ', tvshow_name)
+                console.log('tvshow_name: ', tvshow_name)
 
                 // Hotfix for duplicate elemenets to be skipped. 
                 // kinda hacky way, but hey.. it works :-)
@@ -94,7 +92,8 @@ function episodesReleasedToday(day, month, today) {
                 // }
 
                 // Get name of the TV Show
-                let title = nthParent(todays_episode_node, 3).getElementsByTagName('h2')[0].textContent
+                let title = nthParent(todays_episode_node, 3).children[0].textContent
+                console.log(title)
 
                 var tvshows_div_name = ''
                 var margin = ''
