@@ -154,11 +154,6 @@
             "name": "Altered Carbon",
             "new": "",
             "shortcut": "altered-carbon"
-        },
-        {
-            "name": "Legion",
-            "new": "true",
-            "shortcut": "legion"
         }
     ]
 }
