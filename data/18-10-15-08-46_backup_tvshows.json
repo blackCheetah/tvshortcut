@@ -159,11 +159,6 @@
             "name": "Legion",
             "new": "true",
             "shortcut": "legion"
-        },
-        {
-            "name": "The Expanse",
-            "new": "true",
-            "shortcut": "the-expanse"
         }
     ]
 }
