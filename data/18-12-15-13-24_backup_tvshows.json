@@ -164,11 +164,6 @@
             "name": "The Expanse",
             "new": "true",
             "shortcut": "the-expanse"
-        },
-        {
-            "name": "Titans",
-            "new": "true",
-            "shortcut": "titans"
         }
     ]
 }

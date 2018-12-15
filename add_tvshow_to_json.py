@@ -11,8 +11,8 @@ import datetime
 # New tv shows to be added
 new_tvshows = [
     {
-        'name' : 'The Expanse',
-        'shortcut' : 'the-expanse',
+        'name' : 'Titans',
+        'shortcut' : 'titans',
         'new':'true'
     }
 ]
