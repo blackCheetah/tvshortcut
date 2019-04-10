@@ -165,8 +165,9 @@ def get_data(url_link, source_code, show_name):
     img_index = 0
     for img_index, img in enumerate(tbody.findAll("img")):
         data_src = img.get('data-src')
-        img['data-src'] = r"https://www.edna.cz" + data_src
-        img['src'] = r"https://www.edna.cz" + data_src
+        if data_src is not None:
+            img['data-src'] = r"https://www.edna.cz" + data_src
+            img['src'] = r"https://www.edna.cz" + data_src
 
     # 0, 1, 2 => we start at zero, not 1 :-)
     if img_index < 2:
