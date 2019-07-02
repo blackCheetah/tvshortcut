@@ -1,11 +1,6 @@
 {
     "tvShows": [
         {
-            "name": "Arrow",
-            "new": "",
-            "shortcut": "arrow"
-        },
-        {
             "name": "The Walking Dead",
             "new": "",
             "shortcut": "walking-dead"
@@ -91,11 +86,6 @@
             "shortcut": "south-park"
         },
         {
-            "name": "The Flash",
-            "new": "",
-            "shortcut": "the-flash"
-        },
-        {
             "name": "Fear the Walking Dead",
             "new": "",
             "shortcut": "fear-the-walking-dead"
@@ -134,11 +124,6 @@
             "name": "Knightfall",
             "new": "",
             "shortcut": "knightfall"
-        },
-        {
-            "name": "Black Lightning",
-            "new": "",
-            "shortcut": "black-lightning"
         },
         {
             "name": "Altered Carbon",
