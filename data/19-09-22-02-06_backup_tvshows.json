@@ -144,11 +144,6 @@
             "name": "Titans",
             "new": "true",
             "shortcut": "titans"
-        },
-        {
-            "name": "The Boys",
-            "new": "true",
-            "shortcut": "the-boys"
         }
     ]
 }
