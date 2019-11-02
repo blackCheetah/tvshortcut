@@ -11,10 +11,15 @@ import datetime
 # New tv shows to be added
 new_tvshows = [
     {
-        'name' : 'The Boys',
-        'shortcut' : 'the-boys',
+        'name' : 'The Mandalorian',
+        'shortcut' : 'mandalorian',
         'new':'true'
-    }
+    },
+	{
+        'name' : 'Watchmen',
+        'shortcut' : 'watchmen',
+        'new':'true'
+    },
 ]
 
 # Current time, used for backup files

@@ -94,16 +94,6 @@
             "name": "The Boys",
             "new": "true",
             "shortcut": "the-boys"
-        },
-        {
-            "name": "The Mandalorian",
-            "new": "true",
-            "shortcut": "mandalorian"
-        },
-        {
-            "name": "Watchmen",
-            "new": "true",
-            "shortcut": "watchmen"
         }
     ]
 }
