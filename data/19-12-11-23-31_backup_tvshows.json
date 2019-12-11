@@ -104,11 +104,6 @@
             "name": "Watchmen",
             "new": "true",
             "shortcut": "watchmen"
-        },
-        {
-            "name": "The Witcher",
-            "new": "true",
-            "shortcut": "the-witcher"
         }
     ]
 }

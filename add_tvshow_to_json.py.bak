@@ -14,7 +14,12 @@ new_tvshows = [
         'name' : 'The Mandalorian',
         'shortcut' : 'mandalorian',
         'new':'true'
-    }
+    },
+	{
+        'name' : 'Watchmen',
+        'shortcut' : 'watchmen',
+        'new':'true'
+    },
 ]
 
 # Current time, used for backup files
