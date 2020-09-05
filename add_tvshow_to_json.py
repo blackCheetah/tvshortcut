@@ -11,8 +11,8 @@ import datetime
 # New tv shows to be added
 new_tvshows = [
     {
-        'name' : 'The Witcher',
-        'shortcut' : 'the-witcher',
+        'name' : 'The Last Kingdom',
+        'shortcut' : 'the-last-kingdom',
         'new':'true'
     }
 ]

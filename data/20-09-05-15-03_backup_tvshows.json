@@ -109,11 +109,6 @@
             "name": "The Witcher",
             "new": "true",
             "shortcut": "the-witcher"
-        },
-        {
-            "name": "The Last Kingdom",
-            "new": "true",
-            "shortcut": "the-last-kingdom"
         }
     ]
 }
