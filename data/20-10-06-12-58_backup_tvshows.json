@@ -114,11 +114,6 @@
             "name": "The Last Kingdom",
             "new": "true",
             "shortcut": "the-last-kingdom"
-        },
-        {
-            "name": "Taboo",
-            "new": "true",
-            "shortcut": "taboo"
         }
     ]
 }
