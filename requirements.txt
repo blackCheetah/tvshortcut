@@ -9,7 +9,7 @@ flake8-docstrings==1.0.3
 flake8-polyfill==1.0.1
 gunicorn==19.7.0
 itsdangerous==0.24
-Jinja2==2.9.5
+Jinja2==2.11.3
 lxml==3.7.3
 MarkupSafe==1.0
 mccabe==0.6.1
