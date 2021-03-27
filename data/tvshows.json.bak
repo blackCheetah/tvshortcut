@@ -76,6 +76,11 @@
             "shortcut": "altered-carbon"
         },
         {
+            "name": "Legion",
+            "new": "true",
+            "shortcut": "legion"
+        },
+        {
             "name": "The Expanse",
             "new": "true",
             "shortcut": "the-expanse"
@@ -89,6 +94,31 @@
             "name": "The Boys",
             "new": "true",
             "shortcut": "the-boys"
+        },
+        {
+            "name": "The Mandalorian",
+            "new": "true",
+            "shortcut": "mandalorian"
+        },
+        {
+            "name": "Watchmen",
+            "new": "true",
+            "shortcut": "watchmen"
+        },
+        {
+            "name": "The Witcher",
+            "new": "true",
+            "shortcut": "the-witcher"
+        },
+        {
+            "name": "The Last Kingdom",
+            "new": "true",
+            "shortcut": "the-last-kingdom"
+        },
+        {
+            "name": "Taboo",
+            "new": "true",
+            "shortcut": "taboo"
         }
     ]
 }

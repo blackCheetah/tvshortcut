@@ -1,11 +1,6 @@
 {
     "tvShows": [
         {
-            "name": "American Gods",
-            "new": "",
-            "shortcut": "american-gods"
-        },
-        {
             "name": "West World",
             "new": "",
             "shortcut": "westworld"
@@ -14,21 +9,6 @@
             "name": "Narcos",
             "new": "",
             "shortcut": "narcos"
-        },
-        {
-            "name": "Mr. Robot",
-            "new": "",
-            "shortcut": "mr-robot"
-        },
-        {
-            "name": "Vikings",
-            "new": "",
-            "shortcut": "vikings"
-        },
-        {
-            "name": "Gotham",
-            "new": "",
-            "shortcut": "gotham"
         },
         {
             "name": "Better Call Saul",
@@ -41,19 +21,9 @@
             "shortcut": "peaky-blinders"
         },
         {
-            "name": "Agents of S.H.I.E.L.D.",
-            "new": "",
-            "shortcut": "agents-of-shield"
-        },
-        {
             "name": "SouthPark",
             "new": "",
             "shortcut": "south-park"
-        },
-        {
-            "name": "Prison break",
-            "new": "",
-            "shortcut": "prison-break"
         },
         {
             "name": "Black Mirror",
@@ -69,16 +39,6 @@
             "name": "Knightfall",
             "new": "",
             "shortcut": "knightfall"
-        },
-        {
-            "name": "Altered Carbon",
-            "new": "",
-            "shortcut": "altered-carbon"
-        },
-        {
-            "name": "Legion",
-            "new": "true",
-            "shortcut": "legion"
         },
         {
             "name": "The Expanse",
@@ -99,11 +59,6 @@
             "name": "The Mandalorian",
             "new": "true",
             "shortcut": "mandalorian"
-        },
-        {
-            "name": "Watchmen",
-            "new": "true",
-            "shortcut": "watchmen"
         },
         {
             "name": "The Witcher",
