@@ -10,7 +10,7 @@ flake8-polyfill==1.0.1
 gunicorn==19.7.0
 itsdangerous==0.24
 Jinja2==2.9.5
-lxml==3.7.3
+lxml==4.6.3
 MarkupSafe==1.0
 mccabe==0.6.1
 pycodestyle==2.3.1
