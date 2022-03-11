@@ -11,8 +11,8 @@ import datetime
 # New tv shows to be added
 new_tvshows = [
     {
-        'name' : 'Taboo',
-        'shortcut' : 'taboo',
+        'name' : 'The Book of Boba Fett',
+        'shortcut' : 'the-book-of-boba-fett',
         'new':'true'
     }
 ]
